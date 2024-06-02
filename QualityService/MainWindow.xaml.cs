@@ -114,6 +114,11 @@ namespace QualityService
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
+            if (SelectedReport == null)
+            {
+                return;
+            }
+
           _messagingLayer.SendReport(SelectedReport.Model);
             SelectedReport = null;
         }

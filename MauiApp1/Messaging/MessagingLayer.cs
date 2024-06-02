@@ -46,50 +46,54 @@ namespace MauiApp1.Messaging
 
                 Thread thread = new Thread(async () =>
                 {
-                    ConnectionFactory factory = new ConnectionFactory();
-                    factory.Uri = new System.Uri("amqp://guest:guest@10.0.2.2:5672");
-                    factory.ClientProvidedName = "Rabbit reciever app";
-
-                    IConnection cnn = factory.CreateConnection();
-
-                    IModel channel = cnn.CreateModel();
-                    string exchangeName = "QualityExchange";
-                    string queueName = "QualityExchange";
-                    string routingKey = $"QualityExchange.{MauiApp1.Util.Constants.USER_ID}";
-
-                    channel.ExchangeDeclare(exchangeName, ExchangeType.Direct, true, false, null);
-                    channel.QueueDeclare(queueName, true, false, false, null);
-                    channel.QueueBind(queueName, exchangeName, routingKey, null);
-
-                    channel.BasicQos(prefetchSize: 0, prefetchCount: 1, global: false);
-
-                    var consumer = new EventingBasicConsumer(channel);
-                    consumer.Received += (model, ea) =>
-                    {
-                        byte[] body = ea.Body.ToArray();
-                        string message = Encoding.UTF8.GetString(body);
-                        Report report = JsonConvert.DeserializeObject<Report>(message);
-                        Console.WriteLine("Received {0}", message);
-                        channel.BasicAck(deliveryTag: ea.DeliveryTag, multiple: false);
-                        ReportChangesHandler?.Invoke(report, null);
-                    };
-
-                    string consumerTag = channel.BasicConsume(queueName, false, consumer);
-
                     while (true)
                     {
+
+                        ConnectionFactory factory = new ConnectionFactory();
+                        factory.Uri = new System.Uri("amqp://guest:guest@10.0.2.2:5672");
+                        factory.ClientProvidedName = "Rabbit reciever app";
+
+                        IConnection cnn = factory.CreateConnection();
+
+                        IModel channel = cnn.CreateModel();
+
+
+                        string exchangeName = "QualityExchange";
+                        string queueName = "QualityQueue";
+                        string routingKey = $"QualityRoutingKey.{MauiApp1.Util.Constants.USER_ID}";
+
+                        channel.ExchangeDeclare(exchangeName, ExchangeType.Direct, true, false, null);
+                        channel.QueueDeclare(queueName, true, false, false, null);
+                        channel.QueueBind(queueName, exchangeName, routingKey, null);
+
+                        channel.BasicQos(prefetchSize: 0, prefetchCount: 1, global: false);
+
+                        var consumer = new EventingBasicConsumer(channel);
+                        consumer.Received += (model, ea) =>
+                        {
+                            byte[] body = ea.Body.ToArray();
+                            string message = Encoding.UTF8.GetString(body);
+                            Report report = JsonConvert.DeserializeObject<Report>(message);
+                            Console.WriteLine("Received {0}", message);
+                            channel.BasicAck(deliveryTag: ea.DeliveryTag, multiple: false);
+                            ReportChangesHandler?.Invoke(report, null);
+                        };
+
+                        string consumerTag = channel.BasicConsume(queueName, false, consumer);
+
+
                         if (!_connectivityHelper.IsConnected)
                         {
-                            channel.BasicCancel(consumerTag);
-                            channel.Close();
-                            cnn.Close();
                             break;
                         }
+                        channel.BasicCancel(consumerTag);
+                        channel.Close();
+                        cnn.Close();
                         await Task.Delay(200);
                     }
                 });
 
-                thread.Start() ;
+                thread.Start();
 
             }
             catch (Exception e)

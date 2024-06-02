@@ -39,7 +39,7 @@ namespace MauiApp1.Messaging
                 IModel channel = cnn.CreateModel();
                 string exchangeName = "QualityExchange";
                 string queueName = "QualityQueue";
-                string routingKey = "QualityRoutingKey.*";
+                string routingKey = $"QualityRoutingKey.*";
 
                 channel.ExchangeDeclare(exchangeName, ExchangeType.Direct, true, false, null);
                 channel.QueueDeclare(queueName, true, false, false, null);
@@ -79,6 +79,7 @@ namespace MauiApp1.Messaging
             IConnection cnn = factory.CreateConnection();
 
             IModel channel = cnn.CreateModel();
+
             string exchangeName = "QualityExchange";
             string queueName = "QualityQueue";
             string routingKey = $"QualityRoutingKey.{report.PilotId}";
