@@ -1,0 +1,97 @@
+﻿<Window x:Class="QualityService.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:QualityService"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <ListView ItemsSource="{Binding Reports}" Margin="5" SelectionChanged="ListView_SelectionChanged">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel>
+                        <StackPanel Orientation="Horizontal">
+
+                            <Label Content="Title: "/>
+                            <Label Content="{Binding Model.Title}"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+
+                            <Label Content="RapportType: "/>
+                            <Label Content="{Binding Model.ReportType}"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+
+                            <Label Content="RapportId: "/>
+                            <Label Content="{Binding Model.ReportId}"/>
+                        </StackPanel>
+                        
+                        <Label Content="{Binding Model.ReportDate, StringFormat=D}"/>
+
+                    </StackPanel>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+        
+        <StackPanel Grid.Column="2" Margin="0,5">
+            <Label Content="ReportId"/>
+            <TextBox Text="{Binding SelectedReport.Model.ReportId}" IsEnabled="False"/>
+            <Label Content="Title:"/>
+            <TextBox Text="{Binding SelectedReport.Model.Title}"/>
+            <!--<Label Content="ReportType:"/>
+            <TextBox Text="{Binding ReportType}"/>-->
+            <Label Content="Note:"/>
+            <TextBox Text="{Binding SelectedReport.Model.FollowUpNote}"/>
+
+            <Label Content="Date:"/>
+            <TextBox Text="{Binding SelectedReport.Model.Date}" IsEnabled="False"/>
+            <CheckBox Margin="0,5" IsChecked="{Binding FollowUp}" Content="Needs followup" HorizontalAlignment="Stretch"/>
+            
+            <Button Content="Save" Margin="0,5" Click="Button_Click" />
+        </StackPanel>
+        
+        <DockPanel Margin="5" Grid.Column="1">
+            <ListView ItemsSource="{Binding SelectedReport.Events}" SelectionMode="Single">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel>
+                            <StackPanel  Orientation="Horizontal">
+                            <Label Content="Title: "/>
+                                <Label Content="{Binding Title}"/>
+                            </StackPanel>
+                            <!--<StackPanel>
+                                <Label Content="Note"/>
+                                <Label Content="{Binding Note}"/>
+                            </StackPanel>-->
+                            <StackPanel  Orientation="Horizontal">
+                                <Label Content="Description: "/>
+                                <Label Content="{Binding Description}"/>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal">
+                                <Label Content="Incident type: "/>
+                                <Label Content="{Binding ReportType}"/>
+                            </StackPanel>
+                            <StackPanel  Orientation="Horizontal">
+                                <Label Content="Images: "/>
+                                <Label Content="{Binding Images.Count}"/>
+                            </StackPanel>
+                            <StackPanel  Orientation="Horizontal">
+                                <Label Content="Event time: "/>
+                                <Label Content="{Binding EventTime}"/>
+                            </StackPanel>
+                            
+                           
+
+                        </StackPanel>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </DockPanel>
+    </Grid>
+</Window>

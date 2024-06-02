@@ -5,11 +5,18 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:local="clr-namespace:MauiApp1"
     Shell.FlyoutBehavior="Disabled"
+    xmlns:views="clr-namespace:MauiApp1.View"
+    Shell.NavBarIsVisible="True"
+    Shell.ForegroundColor="{StaticResource Primary}"
+    Shell.TitleColor="{StaticResource White}"
+    Shell.TabBarTitleColor="White"
+    Shell.TabBarForegroundColor="White"
+    Shell.BackgroundColor="{StaticResource Primary}"
     Title="MauiApp1">
 
     <ShellContent
-        Title="Home"
-        ContentTemplate="{DataTemplate local:MainPage}"
+        Title="Reports"
+        ContentTemplate="{DataTemplate views:ReportsView}"
         Route="MainPage" />
 
 </Shell>

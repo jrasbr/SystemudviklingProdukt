@@ -2,13 +2,66 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="MauiApp1.View.ReportsView"
-             x:DataType=""
-             Title="ReportsView">
+             xmlns:local="clr-namespace:MauiApp1.ViewModel"
+             xmlns:model="clr-namespace:MauiApp1.Model"
+             xmlns:viewModel="clr-namespace:MauiApp1.ViewModel"
+             x:DataType="local:ReportsViewModel"
+             xmlns:converter="clr-namespace:MauiApp1.Converters"
+            Title="ReportsView"
+             >
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <converter:ReportStateConverter x:Key="ReportTypeConverter"/>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="New" Command="{Binding NewReportCommand}"/>
+    </ContentPage.ToolbarItems>
     <Grid>
-        <ListView>
-            <ListView.ItemTemplate>
-                <DataTemplate
-            </ListView.ItemTemplate>
-        </ListView>
+        <CollectionView ItemsSource="{Binding Model}" SelectionMode="Single" SelectedItem="{Binding SelectedReport}">
+
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="model:Report">
+                    <ContentView Margin="2">
+                        <Frame>
+                            <StackLayout BackgroundColor="{Binding ReportType, Converter={StaticResource ReportTypeConverter}}">
+                                <VisualStateManager.VisualStateGroups>
+                                    <VisualStateGroup Name="CommonStates">
+                                        <VisualState Name="Normal">
+                                            <VisualState.Setters>
+                                                <Setter Property="BackgroundColor" Value="Transparent"/>
+                                            </VisualState.Setters>
+                                        </VisualState>
+                                        <VisualState Name="Selected">
+                                            <VisualState.Setters>
+                                                <Setter Property="BackgroundColor" Value="Transparent"/>
+                                            </VisualState.Setters>
+                                        </VisualState>
+                                    </VisualStateGroup>
+                                </VisualStateManager.VisualStateGroups>
+
+                                <Label Text="{Binding Title}"/>
+                                <StackLayout Orientation="Horizontal">
+                                    <Label Text="Customer: " Margin="0,0,5,0"/>
+                                    <Label Text="{Binding CustomerId}"/>
+                                </StackLayout>
+                                
+                                <Label Text="{Binding Date}"/>
+                                <Label Text="Events:"/>
+                                <Label Text="{Binding Events.Count}"/>
+                                <StackLayout Orientation="Horizontal">
+
+                                    <Label Text="Rapporttype: " Margin="0,0,5,0"/>
+                                    <Label Text="{Binding ReportType}"/>
+                                </StackLayout>
+
+                            </StackLayout>
+                        </Frame>
+                    </ContentView>
+
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
     </Grid>
 </ContentPage>
