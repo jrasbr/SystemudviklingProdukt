@@ -39,9 +39,11 @@ namespace EmailService
                 foreach (var reciever in report.Recievers) 
                 {
                     Console.WriteLine($"Sending report to email: {reciever.RecieverEmail} reciever: {reciever.RecieverName}");    
+                    Thread.Sleep(1000);
                 }
 
                 channel.BasicAck(deliveryTag: ea.DeliveryTag, multiple: false);
+                Console.WriteLine("All Emails sent");
             };
 
             string consumerTag = channel.BasicConsume(queueName, false, consumer);

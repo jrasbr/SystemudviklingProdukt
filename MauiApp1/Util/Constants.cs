@@ -21,6 +21,6 @@ namespace MauiApp1.Util
         public static string DatabasePath =>
             Path.Combine(FileSystem.AppDataDirectory, DatabaseFilename);
 
-        public static string USER_ID { get;  set; } = Guid.NewGuid().ToString();
+        public static string USER_ID { get; set; } = "LodsId1";//= Guid.NewGuid().ToString();
     }
 }

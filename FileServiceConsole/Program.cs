@@ -38,10 +38,11 @@ namespace FileServiceConsole
                 FileMessage fileMessage = JsonConvert.DeserializeObject<FileMessage>(message);
                 //transfers.Add(fileMessage.FileId, new FileTransfer { FileId = fileMessage.FileId});
                 Console.WriteLine($"Wrote {fileMessage.FileBytes.Length} bytes to {fileMessage.FileId}. {fileMessage.Position + fileMessage.FileBytes.Length}/{fileMessage.Length} recieved");
-
+                Thread.Sleep(500);
                 if (fileMessage.Position + fileMessage.FileBytes.Length >= fileMessage.Length)
                 {
                     Console.WriteLine($"Filetransfer completed for file with Id: {fileMessage.FileId}");
+                    Thread.Sleep(1000);
                 }
 
                 channel.BasicAck(deliveryTag: ea.DeliveryTag, multiple: false);

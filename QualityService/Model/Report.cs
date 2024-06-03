@@ -12,7 +12,7 @@ namespace MauiApp1.Model
     
         public string ReportId { get; set; }
         public string PilotId { get; set; }
-        public string CustomerId { get; set; }
+        public int? CustomerId { get; set; }
         public string Title { get; set; }
         public string FollowupNote { get; set; }
         public IList<ReportEvent> Events { get; set; } = new List<ReportEvent>();

@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:QualityService"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="Quality department" Height="450" Width="800">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
@@ -51,7 +51,7 @@
 
             <Label Content="Date:"/>
             <TextBox Text="{Binding SelectedReport.Model.Date}" IsEnabled="False"/>
-            <CheckBox Margin="0,5" IsChecked="{Binding FollowUp}" Content="Needs followup" HorizontalAlignment="Stretch"/>
+            <CheckBox Margin="0,5" IsChecked="{Binding SelectedReport.FollowUp}" Content="Needs followup" HorizontalAlignment="Stretch"/>
             
             <Button Content="Save" Margin="0,5" Click="Button_Click" />
         </StackPanel>

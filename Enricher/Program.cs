@@ -43,11 +43,19 @@ namespace Enricher
                 try
                 {
                  report = JsonConvert.DeserializeObject<Report>(message);
-
+                    if (report == null)
+                    {
+                        Console.WriteLine("Error - redirectint to dead letter queue");
+                        channel.BasicAck(deliveryTag: ea.DeliveryTag, multiple: false);
+                        return;
+                    }
+                   
                 }
                 catch (Exception e)
                 {
-
+                    Console.WriteLine("Error - redirectint to dead letter queue");
+                    channel.BasicAck(deliveryTag: ea.DeliveryTag, multiple: false);
+                    return;
                 }
                 if (report.Events.Count > 0)
                 {
@@ -74,6 +82,7 @@ namespace Enricher
                         Console.WriteLine($"Customer with id {report.CustomerId} not found. Passing to DeadLetterQueue" );
 
                         channel.BasicAck(deliveryTag: ea.DeliveryTag, multiple: false);
+                        Thread.Sleep(1000);
                         return;
                     }
                     if (contactInsurance)
@@ -102,6 +111,7 @@ namespace Enricher
                     foreach (var reciever in report.Recievers)
                     {
                         Console.WriteLine($"Added email: {reciever.RecieverEmail} reciever:{reciever.RecieverName}");
+                        Thread.Sleep(1000);
                     }
 
                     // Enrich the report
@@ -144,6 +154,7 @@ namespace Enricher
 
             channel.BasicPublish(exchangeName, routingKey, null, messageBytes);
             Console.WriteLine("Sent report to contentbased-router");
+            Thread.Sleep(1000);
             channel.Close();
             cnn.Close();
 

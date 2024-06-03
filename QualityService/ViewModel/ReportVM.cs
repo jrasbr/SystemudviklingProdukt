@@ -10,6 +10,8 @@ namespace QualityService.ViewModel
 {
     public class ReportVM
     {
+        private bool _followUp;
+
         public ReportVM()
         {
             Model = new Report();
@@ -21,8 +23,16 @@ namespace QualityService.ViewModel
 
         public Report Model { get; set; }
 
-        public bool FollowUp { get; set; }
-           
+        public bool FollowUp 
+        {
+            get => _followUp;
+            set
+            { 
+                _followUp = value;
+                Model.ReportType = value ? ReportType.FollowUp : ReportType.Normal;
+            } 
+        }
+
     }
     
 }

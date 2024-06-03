@@ -44,6 +44,8 @@ namespace ContentBasedRouter
                             break;
                         case ReportEventType.Accident:
                             informInsurance = true;
+                            Console.WriteLine("Accident Event. Will route report to be sent to insurance.");
+                            Thread.Sleep(1000);
                             break;
                         default:
                             break;

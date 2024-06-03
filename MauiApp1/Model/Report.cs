@@ -13,7 +13,7 @@ namespace MauiApp1.Model
     {
         [PrimaryKey]
         public string ReportId { get; set; } = Guid.NewGuid().ToString();
-        public int CustomerId { get; set; }
+        public int? CustomerId { get; set; }
 
         public string PilotId { get; set; } = Constants.USER_ID;
         public string FollowupNote { get; set; }
@@ -23,7 +23,7 @@ namespace MauiApp1.Model
         public IList<ReportEvent> Events { get; set; } = new List<ReportEvent>();
 
         [OneToMany(CascadeOperations = CascadeOperation.All)]
-        public IList<ReportReciever> Recievers { get; set; } = new List<ReportReciever>() { new ReportReciever() { RecieverName = "Quality" } };
+        public IList<ReportReciever> Recievers { get; set; } = new List<ReportReciever>();// { new ReportReciever() { RecieverName = "Quality" } };
        
         public DateTime Date { get; set; } = DateTime.Now;
         public string Location { get; set; }

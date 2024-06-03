@@ -44,7 +44,7 @@ namespace MauiApp1.Repository
         public async Task<Report> Get(string id)
         {
             var report = await Database.Table<Report>().Where(i => i.ReportId == id).FirstOrDefaultAsync();
-            report.Events = await Database.Table<ReportEvent>().Where(i => i.ReportId == id).ToListAsync();
+            //report.Events = await Database.Table<ReportEvent>().Where(i => i.ReportId == id).ToListAsync();
             return report;
 
         }

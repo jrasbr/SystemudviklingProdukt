@@ -44,7 +44,15 @@ namespace MauiApp1.ViewModel
         {
             _db = db;
             _messagingLayer = messagingLayer;
-            _messagingLayer.ReportChangesHandler += (s, e) => LoadData();
+            _messagingLayer.ReportChangesHandler += async (s, e) =>
+            {
+                if (s is Report report)
+                {
+                    await _db.Save(report);
+                    LoadData();
+                }
+
+            };
 
             NewReportCommand = new Command(async () =>
             {

@@ -42,25 +42,20 @@ namespace MauiApp1.Messaging
         {
             try
             {
-
-
-                Thread thread = new Thread(async () =>
+                await Task.Run(async () =>
                 {
-                    while (true)
+                    ConnectionFactory factory = new ConnectionFactory
                     {
+                        Uri = new Uri("amqp://guest:guest@10.0.2.2:5672"),
+                        ClientProvidedName = "RabbitMQ Receiver App"
+                    };
 
-                        ConnectionFactory factory = new ConnectionFactory();
-                        factory.Uri = new System.Uri("amqp://guest:guest@10.0.2.2:5672");
-                        factory.ClientProvidedName = "Rabbit reciever app";
-
-                        IConnection cnn = factory.CreateConnection();
-
-                        IModel channel = cnn.CreateModel();
-
-
+                    using (IConnection cnn = factory.CreateConnection())
+                    using (IModel channel = cnn.CreateModel())
+                    {
                         string exchangeName = "QualityExchange";
-                        string queueName = "QualityQueue";
-                        string routingKey = $"QualityRoutingKey.{MauiApp1.Util.Constants.USER_ID}";
+                        string queueName = $"QualityQueue.{MauiApp1.Util.Constants.USER_ID}";
+                        string routingKey = $"QualityRoutingKey.1";
 
                         channel.ExchangeDeclare(exchangeName, ExchangeType.Direct, true, false, null);
                         channel.QueueDeclare(queueName, true, false, false, null);
@@ -69,36 +64,35 @@ namespace MauiApp1.Messaging
                         channel.BasicQos(prefetchSize: 0, prefetchCount: 1, global: false);
 
                         var consumer = new EventingBasicConsumer(channel);
-                        consumer.Received += (model, ea) =>
+                        consumer.Received += async (model, ea) =>
                         {
                             byte[] body = ea.Body.ToArray();
                             string message = Encoding.UTF8.GetString(body);
-                            Report report = JsonConvert.DeserializeObject<Report>(message);
-                            Console.WriteLine("Received {0}", message);
+                            Report report = await JsonConvert.DeserializeObjectAsync<Report>(message);
                             channel.BasicAck(deliveryTag: ea.DeliveryTag, multiple: false);
                             ReportChangesHandler?.Invoke(report, null);
                         };
 
                         string consumerTag = channel.BasicConsume(queueName, false, consumer);
 
-
-                        if (!_connectivityHelper.IsConnected)
+                        while (true)
                         {
-                            break;
+                            if (!_connectivityHelper.IsConnected)
+                            {
+                                channel.BasicCancel(consumerTag);
+                                channel.Close();
+                                cnn.Close();
+                                break;
+                            }
+
+                            await Task.Delay(200);
                         }
-                        channel.BasicCancel(consumerTag);
-                        channel.Close();
-                        cnn.Close();
-                        await Task.Delay(200);
                     }
                 });
-
-                thread.Start();
-
             }
             catch (Exception e)
             {
-
+                // Handle exception (log it or show a message to the user)
             }
         }
 

@@ -23,9 +23,9 @@
 
             <CollectionView.ItemTemplate>
                 <DataTemplate x:DataType="model:Report">
-                    <ContentView Margin="2">
-                        <Frame>
-                            <StackLayout BackgroundColor="{Binding ReportType, Converter={StaticResource ReportTypeConverter}}">
+                    <ContentView >
+                        <Frame Margin="2" BackgroundColor="{Binding ReportType, Converter={StaticResource ReportTypeConverter}}">
+                            <StackLayout>
                                 <VisualStateManager.VisualStateGroups>
                                     <VisualStateGroup Name="CommonStates">
                                         <VisualState Name="Normal">
